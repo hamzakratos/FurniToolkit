@@ -114,4 +114,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Form1_button4_Click_Done_converting_" xml:space="preserve">
+    <value>Done converting!</value>
+  </data>
+  <data name="Form1_button4_Click_Some_invalid_file_paths" xml:space="preserve">
+    <value>Some invalid file paths</value>
+  </data>
 </root>

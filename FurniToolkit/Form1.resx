@@ -120,4 +120,16 @@
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label5.Text" xml:space="preserve">
+    <value>This tool converts an old furnidata.txt to the new furnidata.xml.
+There might be some errors in the conversion, because of possible errors in the old furnidata.txt
+The converted furnidata is going to be saved as furnidata_converted.xml
+  </value>
+  </data>
+  <metadata name="openFileDialog3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>297, 17</value>
+  </metadata>
+  <metadata name="openFileDialog2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>156, 20</value>
+  </metadata>
 </root>
