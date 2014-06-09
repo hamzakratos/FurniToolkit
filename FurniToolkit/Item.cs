@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
+using FurniToolkit.Properties;
 
 namespace FurniToolkit
 {
-    class Item
+    internal class Item
     {
-        public int ID;
-        public int Revision;
+        public long ID;
+        public long Revision;
         public int DefaultDir;
         public char Type;
         public string ClassName;
@@ -114,78 +116,89 @@ namespace FurniToolkit
             else
                 ColorIndex = -1;
         }
+
         public Item(string data)
         {
             if (string.IsNullOrWhiteSpace(data))
                 return;
 
-            data = Regex.Replace(data, @"/\[{1,}/mg", "");
-            data = Regex.Replace(data, @"/\[{1,}/mg", "");
-            List<string> splitted = data.Split('"').ToList();
-            //RemoveOnValue(splitted, ",", true);
-            splitted.RemoveAll(s => s.Trim() == ",");
-            splitted.RemoveAt(0);
-            splitted.RemoveAt(splitted.Count - 1);
-
-            Type = splitted[0][0];
-            ID = int.Parse(splitted[1]);
-            ClassName = splitted[2];
-            if (ClassName.Contains('*'))
-            {
-                ColorIndex = int.Parse(ClassName.Split('*')[1]);
-            }
-            else
-                ColorIndex = 0;
-
-            Revision = int.Parse(splitted[3]);
-            TileSizeX = string.IsNullOrWhiteSpace(splitted[4]) ? 1 : int.Parse(splitted[4]);
-            TileSizeY = string.IsNullOrWhiteSpace(splitted[5]) ? 1 : int.Parse(splitted[5]);
-            TileSizeZ = string.IsNullOrWhiteSpace(splitted[6]) ? 0 : int.Parse(splitted[6]);
-            Colors = splitted[7].Split(',').ToList();
-            Title = splitted[8];
-            Description = splitted[9];
-
-            // Fix if invalid stuff
-            TileSizeX = Math.Max(TileSizeX, 1);
-            TileSizeY = Math.Max(TileSizeY, 1);
-
-            // Set some default values
-            SpecialType = 1;
-            OfferID = -1;
-            RentOfferID = -1;
-            CustomParams = "";
-
-            // We usually have corruped stuff below, so we use try, catch
             try
             {
-                AdURL = splitted[10];
-                if (splitted.Count > 17)
+                data = Regex.Replace(data, @"/\[{1,}/mg", "");
+                data = Regex.Replace(data, @"/\[{1,}/mg", "");
+                List<string> splitted = data.Split('"').ToList();
+                //RemoveOnValue(splitted, ",", true);
+                splitted.RemoveAll(s => s.Trim() == ",");
+                splitted.RemoveAt(0);
+                splitted.RemoveAt(splitted.Count - 1);
+
+                Type = splitted[0][0];
+                ID = long.Parse(splitted[1]);
+                ClassName = splitted[2];
+                if (ClassName.Contains('*'))
                 {
-                    OfferID = int.Parse(splitted[11]);
-                    Buyout = bool.Parse(splitted[12]);
-                    RentOfferID = int.Parse(splitted[13]);
-                    RentBuyout = bool.Parse(splitted[14]);
+                    ColorIndex = int.Parse(ClassName.Split('*')[1]);
+                }
+                else
+                    ColorIndex = 0;
 
-                    CustomParams = splitted[15];
-                    SpecialType = int.Parse(splitted[16]);
-                    BuildersClub = bool.Parse(splitted[17]);
+                long.TryParse(splitted[3], out Revision);
+                TileSizeX = string.IsNullOrWhiteSpace(splitted[4]) ? 1 : int.Parse(splitted[4]);
+                TileSizeY = string.IsNullOrWhiteSpace(splitted[5]) ? 1 : int.Parse(splitted[5]);
+                TileSizeZ = string.IsNullOrWhiteSpace(splitted[6]) ? 0 : int.Parse(splitted[6]);
+                Colors = splitted[7].Split(',').ToList();
+                Title = splitted[8];
+                Description = splitted[9];
 
-                    if (Type != 'i')
+                // Fix if invalid stuff
+                TileSizeX = Math.Max(TileSizeX, 1);
+                TileSizeY = Math.Max(TileSizeY, 1);
+
+                // Set some default values
+                SpecialType = 1;
+                OfferID = -1;
+                RentOfferID = -1;
+                CustomParams = "";
+
+                // We usually have corruped stuff below, so we use try, catch
+                try
+                {
+                    AdURL = splitted[10];
+                    if (splitted.Count > 17)
                     {
-                        CanStandOn = bool.Parse(splitted[18]);
-                        CanSitOn = bool.Parse(splitted[19]);
-                        CanLayOn = bool.Parse(splitted[20]);
+                        OfferID = int.Parse(splitted[11]);
+                        Buyout = bool.Parse(splitted[12]);
+                        RentOfferID = int.Parse(splitted[13]);
+                        RentBuyout = bool.Parse(splitted[14]);
+
+                        CustomParams = splitted[15];
+                        SpecialType = int.Parse(splitted[16]);
+                        BuildersClub = bool.Parse(splitted[17]);
+
+                        if (Type != 'i')
+                        {
+                            CanStandOn = bool.Parse(splitted[18]);
+                            CanSitOn = bool.Parse(splitted[19]);
+                            CanLayOn = bool.Parse(splitted[20]);
+                        }
+                    }
+                    else if (splitted.Count > 13)
+                    {
+                        CatalogPageID = int.Parse(splitted[11]);
+                        OfferID = int.Parse(splitted[12]);
                     }
                 }
-                else if (splitted.Count > 13)
+                catch (Exception x)
                 {
-                    CatalogPageID = int.Parse(splitted[11]);
-                    OfferID = int.Parse(splitted[12]);
+                    //Console.WriteLine("Partly corruped item: '{0}'", FullName);
                 }
             }
             catch (Exception x)
             {
-                //Console.WriteLine("Partly corruped item: '{0}'", FullName);
+                MessageBox.Show(Resources.Item_Item_Your_furnidata_txt_is_malformed__see_the_error_below_ + Environment.NewLine
+                                + data + Environment.NewLine +
+                                x);
+                throw new FormatException(string.Format("Failed on parsing an item"));
             }
         }
     }

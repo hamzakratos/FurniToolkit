@@ -120,4 +120,7 @@
   <data name="Form1_button4_Click_Some_invalid_file_paths" xml:space="preserve">
     <value>Some invalid file paths</value>
   </data>
+  <data name="Item_Item_Your_furnidata_txt_is_malformed__see_the_error_below_" xml:space="preserve">
+    <value>Your furnidata.txt is malformed, see the error below:</value>
+  </data>
 </root>

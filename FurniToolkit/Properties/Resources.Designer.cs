@@ -77,5 +77,14 @@ namespace FurniToolkit.Properties {
                 return ResourceManager.GetString("Form1_button4_Click_Some_invalid_file_paths", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your furnidata.txt is malformed, see the error below:.
+        /// </summary>
+        internal static string Item_Item_Your_furnidata_txt_is_malformed__see_the_error_below_ {
+            get {
+                return ResourceManager.GetString("Item_Item_Your_furnidata_txt_is_malformed__see_the_error_below_", resourceCulture);
+            }
+        }
     }
 }

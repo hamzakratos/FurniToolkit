@@ -34,6 +34,7 @@ namespace FurniToolkit
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 _sourceFilePath = openFileDialog1.FileName;
+                textBox1.Text = _sourceFilePath;
             }
         }
 
@@ -42,6 +43,7 @@ namespace FurniToolkit
             if (openFileDialog2.ShowDialog() == DialogResult.OK)
             {
                 _syncFilePath = openFileDialog2.FileName;
+                textBox2.Text = _syncFilePath;
             }
         }
 
@@ -50,6 +52,7 @@ namespace FurniToolkit
             if (openFileDialog3.ShowDialog() == DialogResult.OK)
             {
                 _convertFilePath = openFileDialog3.FileName;
+                textBox3.Text = _convertFilePath;
             }
         }
 
@@ -105,7 +108,14 @@ namespace FurniToolkit
                     MatchCollection collection = Regex.Matches(chunk, @"\[+?((.)*?)\]");
                     foreach (Match item in collection)
                     {
-                        items.Add(new Item(item.Value));
+                        try
+                        {
+                            items.Add(new Item(item.Value));
+                        }
+                        catch (FormatException)
+                        {
+                            return;
+                        }
                     }
                 }
                 SaveFurnidata(items, CONVERT_FILENAME);
@@ -117,8 +127,8 @@ namespace FurniToolkit
         private List<Item> LoadFurnidata(string path)
         {
             List<Item> items = new List<Item>();
-
             XmlDocument xml = new XmlDocument();
+
             xml.Load(path);
             XmlNodeList itemNodes = xml.SelectNodes("//furnitype");
 
@@ -128,28 +138,6 @@ namespace FurniToolkit
                 if (!items.Any(i => i.ID == item.ID && i.Type == item.Type))
                     items.Add(item);
             }
-            //XmlReader reader = XmlReader.Create(path);
-            //char currentType = 's';
-            //while (reader.Read())
-            //{
-            //    if (reader.NodeType != XmlNodeType.Element)
-            //        continue;
-
-            //    if (reader.Name == "wallitemtypes")
-            //        currentType = 'i';
-
-
-            //    if (reader.Name == "furnitype")
-            //    {
-            //        Item item = new Item(reader, currentType);
-            //        if (item.ID == 13)
-            //        {
-                        
-            //        }
-            //        if(!items.ContainsKey(item.ID))
-            //            items.Add(item.ID, item);
-            //    }
-            //}
             return items;
         }
 
@@ -209,18 +197,6 @@ namespace FurniToolkit
                     writer.WriteAttributeString("classname", i.ClassName);
 
                     writer.WriteElementString("revision", i.Revision.ToString());
-                    //writer.WriteElementString("defaultdir", "0");
-                    //writer.WriteElementString("xdim", i.TileSizeX.ToString());
-                    //writer.WriteElementString("ydim", i.TileSizeY.ToString());
-
-                    //writer.WriteStartElement("partcolors");
-                    //foreach (string color in i.Colors)
-                    //{
-                    //    writer.WriteStartElement("color");
-                    //    writer.WriteString(color);
-                    //    writer.WriteEndElement();
-                    //}
-                    //writer.WriteEndElement();
 
                     writer.WriteElementString("name", i.Title);
                     writer.WriteElementString("description", i.Description);
@@ -230,21 +206,8 @@ namespace FurniToolkit
                     writer.WriteElementString("rentofferid", i.RentOfferID.ToString());
                     writer.WriteElementString("rentbuyout", Convert.ToInt32(i.RentBuyout).ToString());
                     writer.WriteElementString("bc", Convert.ToInt32(i.BuildersClub).ToString());
-                    // writer.WriteElementString("customparams", i.CustomParams.ToString());
                     writer.WriteElementString("specialtype", i.SpecialType.ToString());
-                    //writer.WriteElementString("canstandon", Convert.ToInt32(i.CanStandOn).ToString());
-                    //writer.WriteElementString("cansiton", Convert.ToInt32(i.CanSitOn).ToString());
-                    //writer.WriteElementString("canlayon", Convert.ToInt32(i.CanLayOn).ToString());
                     writer.WriteEndElement();
-                    //var objects = new object[]
-                    //{
-                    //    i.ID, i.Type, i.Name, i.ColorIndex, i.Revision, i.TileSizeX, i.TileSizeY, i.TileSizeZ,
-                    //    String.Join(",", i.Colors), i.Title, i.Description, i.AdURL, i.CatalogPageID, i.OfferID
-                    //};
-                    //builder.AppendLine(
-                    //    string.Format(
-                    //        "ID: {0}, TYPE: {1}, NAME: {2}, COLORINDEX: {3}, REVISION: {4}, TILESIZEX: {5}, TILESIZEY: {6}, TILESIZEZ: {7}, COLORS: {8}, TITLE: {9}, DESCRIPTION: {10}, ADURL: {11}, CATALOGPAGEID: {12}, OFFERID: {13}",
-                    //        objects));
                 }
                 writer.WriteEndElement();
 
