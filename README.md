@@ -6,4 +6,4 @@ This tool has two features:
 - Sync two furnidata XML files:
  - The functions make a new furnidata.xml from the source file, and adds the missing entries which the sync-file has.
  
- You can enter both an URL and a local file path in the boxes.
+You can enter both an URL and a local file path in the boxes.
