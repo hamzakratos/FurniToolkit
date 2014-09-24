@@ -156,7 +156,7 @@ namespace FurniToolkit
                 {
                     writer.WriteStartElement("furnitype");
                     writer.WriteAttributeString("id", i.ID.ToString());
-                    writer.WriteAttributeString("classname", i.ClassName);
+                    writer.WriteAttributeString("classname", i.ColorIndex != -1 ? string.Format("{0}*{1}", i.ClassName, i.ColorIndex) : i.ClassName);
 
                     writer.WriteElementString("revision", i.Revision.ToString());
                     writer.WriteElementString("defaultdir", "0");
@@ -166,9 +166,7 @@ namespace FurniToolkit
                     writer.WriteStartElement("partcolors");
                     foreach (string color in i.Colors)
                     {
-                        writer.WriteStartElement("color");
-                        writer.WriteString(color);
-                        writer.WriteEndElement();
+                        writer.WriteElementString("color", color);
                     }
                     writer.WriteEndElement();
 

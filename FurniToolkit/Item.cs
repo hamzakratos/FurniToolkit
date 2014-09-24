@@ -64,8 +64,9 @@ namespace FurniToolkit
                     case "ydim":
                         TileSizeY = int.Parse(child.InnerXml);
                         break;
-                    case "color":
-                        Colors.Add(child.InnerXml);
+                    case "partcolors":
+                        foreach(XmlNode color in child.ChildNodes)
+                            Colors.Add(color.InnerXml);
                         break;
                     case "name":
                         Title = child.InnerXml;
@@ -140,13 +141,13 @@ namespace FurniToolkit
                     ColorIndex = int.Parse(ClassName.Split('*')[1]);
                 }
                 else
-                    ColorIndex = 0;
+                    ColorIndex = -1;
 
                 long.TryParse(splitted[3], out Revision);
                 TileSizeX = string.IsNullOrWhiteSpace(splitted[4]) ? 1 : int.Parse(splitted[4]);
                 TileSizeY = string.IsNullOrWhiteSpace(splitted[5]) ? 1 : int.Parse(splitted[5]);
                 TileSizeZ = string.IsNullOrWhiteSpace(splitted[6]) ? 0 : int.Parse(splitted[6]);
-                Colors = splitted[7].Split(',').ToList();
+                Colors = splitted[7].Split(',').Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
                 Title = splitted[8];
                 Description = splitted[9];
 
